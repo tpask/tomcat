@@ -6,7 +6,7 @@
 # description: Tomcat Web Application Server
 #
 # processname: tomcat
-# pidfile: /var/run/tomcat.pid
+# pidfile: /opt/tomcat/latest/tomcat.pid
 
 ### BEGIN INIT INFO
 # Provides: tomcat
@@ -43,7 +43,7 @@ start() {
     echo -n $"Starting $prog: "
     touch $CATALINA_PID
     chown $TOMCAT_USER $CATALINA_PID
-    daemon --user $TOMCAT_USER "$CATALINA_HOME/bin/catalina.sh" start
+    daemon --user $TOMCAT_USER "$CATALINA_HOME/bin/catalina.sh" start &&
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $lockfile

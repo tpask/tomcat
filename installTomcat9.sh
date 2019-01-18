@@ -1,27 +1,53 @@
-# installs Tomcat
+#!/bin/bash
+# installs Tomcat9
+# author: Thien P
 
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+initFile="tomcatInit.d"
+tomcat_home="/opt/tomcat"
+
+javaDevKit="java-1.8.0-openjdk-devel"
 tomcatUri="https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.14/bin/apache-tomcat-9.0.14.tar.gz"
 tarBall=`echo $tomcatUri |awk -F "/" '{print $NF}'`
 tomcatVer=$(echo $tarBall |sed "s/\.tar\.gz//")
 
+#create tomcat user 
+useradd -m -U -d $tomcat_home -s /bin/bash tomcat
+
 yum -y install java-1.8.0-openjdk-devel
+if [ ! -e $tarBall ]; then 
+  if ! [ $(which wget) ]; then yum -y install wget ; fi
+  wget $tomcatUri
+else echo "*** $tarBall exists. Using $tarBall instead of downloading new one ***"
+fi 
 
-useradd -m -U -d /opt/tomcat -s /bin/bash tomcat
-
-wget $tomcatUri
 if [ -f $tarBall ] ; then 
+  #first install java
+  yum -y install $java-1.8.0-openjdk-devel
+  
   tar -xvzf $tarBall
-  mkdir -p /opt/tomcat
-  mv $tomcatVer /opt/tomcat/
-  ln -s /opt/tomcat/$tomcatVer /opt/tomcat/latest
-  chown -R tomcat:tomcat /opt/tomcat
-  chmod 755 /opt/tomcat
-  chmod +x /opt/tomcat/latest/bin/*.sh
+  mkdir -p $tomcat_home
+  mv $tomcatVer $tomcat_home
+  ln -s $tomcat_home/$tomcatVer $tomcat_home/latest
+  chown -R tomcat:tomcat $tomcat_home
+  chmod 755 $tomcat_home
+  chmod +x $tomcat_home/latest/bin/*.sh
+  if [ ! -d $tomcat_home/latest/etc ]; then mkdir $tomcat_home/latest/etc ; fi  #create etc dir
+  if [ -f  $scriptDir/$initFile ] ; then 
+    cp $scriptDir/$initFile $tomcat_home/latest/etc/tomcat 
+    if [ ! -e /etc/init.d/tomcat ]; 
+      then ln -s $tomcat_home/latest/etc/tomcat /etc/init.d/tomcat 
+      else echo " **** /etc/init.d/tomcat already exists.  Don't create soft link. *****"
+    fi
+    # enable tomcat service
+    chkconfig --add tomcat
+    echo "**** start tomcat using: service tomcat start *****"
+  else
+    echo "*** no $scriptDir/$initFile to copy to $tomcat_home/latest/etc/tomcat ****"
+  fi 
+
 else
-  echo "can't download tar file from $tomcatUri. tomcat not installed"
+  echo "**** can't download tar file from $tomcatUri. tomcat not installed nor is $java-1.8.0-openjdk-devel ****"
   exit 1
 fi
 
-# enable tomcat service
-chkconfig --add tomcat
-service tomcat start
