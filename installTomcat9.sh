@@ -31,7 +31,7 @@ if [ -f $tarBall ] ; then
   ln -s $tomcat_home/$tomcatVer $tomcat_home/latest
   chown -R tomcat:tomcat $tomcat_home
   chmod 755 $tomcat_home
-  chmod +x $tomcat_home/latest/bin/*.sh
+  chmod u+x $tomcat_home/latest/bin/*.sh
   if [ ! -d $tomcat_home/latest/etc ]; then mkdir $tomcat_home/latest/etc ; fi  #create etc dir
   if [ -f  $scriptDir/$initFile ] ; then 
     cp $scriptDir/$initFile $tomcat_home/latest/etc/tomcat 
