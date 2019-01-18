@@ -15,6 +15,7 @@ if [ -f $tarBall ] ; then
   mv $tomcatVer /opt/tomcat/
   ln -s /opt/tomcat/$tomcatVer /opt/tomcat/latest
   chown -R tomcat:tomcat /opt/tomcat
+  chmod 755 /opt/tomcat
   chmod +x /opt/tomcat/latest/bin/*.sh
 else
   echo "can't download tar file from $tomcatUri. tomcat not installed"
