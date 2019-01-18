@@ -15,7 +15,6 @@ tomcatVer=$(echo $tarBall |sed "s/\.tar\.gz//")
 #create tomcat user 
 useradd -m -U -d $tomcat_home -s /bin/bash tomcat
 
-yum -y install java-1.8.0-openjdk-devel
 if [ ! -e $tarBall ]; then 
   if ! [ $(which wget) ]; then yum -y install wget ; fi
   wget $tomcatUri
