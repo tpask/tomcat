@@ -20,3 +20,7 @@ else
   echo "can't download tar file from $tomcatUri. tomcat not installed"
   exit 1
 fi
+
+# enable tomcat service
+chkconfig --add tomcat
+service tomcat start
