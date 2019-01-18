@@ -2,7 +2,7 @@
 #
 # tomcatd       Start Tomcat server
 #
-# chkconfig: - 80 20
+# chkconfig: 2345 80 20
 # description: Tomcat Web Application Server
 #
 # processname: tomcat
@@ -30,7 +30,7 @@ lockfile=/var/lock/subsys/$prog
 #CATALINA_HOME is the location of the bin files of Tomcat
 export CATALINA_HOME="/opt/tomcat/latest"
 #CATALINA_PID is the location of the PID file
-export CATALINA_PID="/var/run/$prog.pid"
+export CATALINA_PID="${CATALINA_HOME}/$prog.pid"
 #TOMCAT_USER is the default user of tomcat
 TOMCAT_USER=tomcat
 #SHUTDOWN_VERBOSE Whether to annoy the user with "attempting to shut down" messages or not
