@@ -5,7 +5,7 @@
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 initFile="tomcatInit.d"
 tomcat_home="/opt/tomcat"
-tomcatPidDir="/opt/tomcat/lastest/temp"
+tomcatPidDir="/opt/tomcat/latest/temp"
 
 javaDevKit="java-1.8.0-openjdk-devel"
 tomcatUri="https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.14/bin/apache-tomcat-9.0.14.tar.gz"
@@ -23,7 +23,7 @@ fi
 
 if [ -f $tarBall ] ; then 
   #first install java
-  yum -y install $java-1.8.0-openjdk-devel
+  yum -y install $javaDevKit
   
   tar -xvzf $tarBall
   mkdir -p $tomcat_home
@@ -32,7 +32,7 @@ if [ -f $tarBall ] ; then
   chown -R tomcat:tomcat $tomcat_home
   chmod 755 $tomcat_home
   chmod u+x $tomcat_home/latest/bin/*.sh
-  chmod 777 $tocmatPidDir
+  chmod 777 $tomcatPidDir
   
   if [ ! -d $tomcat_home/latest/etc ]; then mkdir $tomcat_home/latest/etc ; fi  #create etc dir
   if [ -f  $scriptDir/$initFile ] ; then 
