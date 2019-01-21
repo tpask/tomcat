@@ -4,8 +4,8 @@
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 initFile="tomcatInit.d"
-tomcat_home="/opt/tomcat"
-tomcatPidDir="/opt/tomcat/latest/temp"
+CATALINA_HOME="/opt/tomcat"
+tomcatPidDir="/opt/tomcat/temp"
 
 javaDevKit="java-1.8.0-openjdk-devel"
 tomcatUri="https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.14/bin/apache-tomcat-9.0.14.tar.gz"
@@ -13,7 +13,8 @@ tarBall=`echo $tomcatUri |awk -F "/" '{print $NF}'`
 tomcatVer=$(echo $tarBall |sed "s/\.tar\.gz//")
 
 #create tomcat user 
-useradd -m -U -d $tomcat_home -s /bin/bash tomcat
+#useradd -m -U -s /bin/bash tomcat
+useradd -m -U -s /bin/false tomcat
 
 if [ ! -e $tarBall ]; then 
   if ! [ $(which wget) ]; then yum -y install wget ; fi
@@ -26,27 +27,27 @@ if [ -f $tarBall ] ; then
   yum -y install $javaDevKit
   
   tar -xvzf $tarBall
-  mkdir -p $tomcat_home
-  mv $tomcatVer $tomcat_home
-  ln -s $tomcat_home/$tomcatVer $tomcat_home/latest
-  chown -R tomcat:tomcat $tomcat_home
-  chmod 755 $tomcat_home
-  chmod u+x $tomcat_home/latest/bin/*.sh
+  mkdir -p $CATALINA_HOME
+  if [ ! -d $CATALINA_HOME ]; then mv $CATALINA_HOME $CATALINA_HOME.old ; fi
+  mv $tomcatVer tomcat; mv tomcat /opt/
+  chown -R tomcat:tomcat $CATALINA_HOME
+  chmod 755 $CATALINA_HOME
+  chmod u+x $CATALINA_HOME/bin/*.sh
   chmod 777 $tomcatPidDir
   
-  if [ ! -d $tomcat_home/latest/etc ]; then mkdir $tomcat_home/latest/etc ; fi  #create etc dir
   if [ -f  $scriptDir/$initFile ] ; then 
-    cp $scriptDir/$initFile $tomcat_home/latest/etc/tomcat 
+    if [ ! -d $CATALINA_HOME/etc ]; then mkdir $CATALINA_HOME/etc ; fi  #create etc dir
+    cp $scriptDir/$initFile $CATALINA_HOME/etc/tomcat 
+    chmod 750 /opt/tomcat/etc/tomcat
     if [ ! -e /etc/init.d/tomcat ]; 
-      then ln -s $tomcat_home/latest/etc/tomcat /etc/init.d/tomcat 
-           chmod 750 $tomcat_home/latest/etc/tomcat
+      then ln -s $CATALINA_HOME/etc/tomcat /etc/init.d/tomcat 
       else echo " **** /etc/init.d/tomcat already exists.  Don't create soft link. *****"
     fi
     # enable tomcat service
     chkconfig --add tomcat
     echo "**** start tomcat using: service tomcat start *****"
   else
-    echo "*** no $scriptDir/$initFile to copy to $tomcat_home/latest/etc/tomcat ****"
+    echo "*** no $scriptDir/$initFile to copy to $CATALINA_HOME/etc/tomcat ****"
   fi 
 
 else

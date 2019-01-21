@@ -6,7 +6,7 @@
 # description: Tomcat Web Application Server
 #
 # processname: tomcat
-# pidfile: /opt/tomcat/latest/tomcat.pid
+# pidfile: /opt/tomcat/tomcat.pid
 
 ### BEGIN INIT INFO
 # Provides: tomcat
@@ -28,7 +28,7 @@ lockfile=/var/lock/subsys/$prog
 # for additional tomcat config please use setenv
 
 #CATALINA_HOME is the location of the bin files of Tomcat
-export CATALINA_HOME="/opt/tomcat/latest"
+export CATALINA_HOME="/opt/tomcat"
 #CATALINA_PID is the location of the PID file
 export CATALINA_PID="${CATALINA_HOME}/$prog.pid"
 #TOMCAT_USER is the default user of tomcat
@@ -41,8 +41,6 @@ SHUTDOWN_WAIT="20"
 # Start of the script
 start() {
     echo -n $"Starting $prog: "
-    touch $CATALINA_PID
-    chown $TOMCAT_USER $CATALINA_PID
     daemon --user $TOMCAT_USER "$CATALINA_HOME/bin/catalina.sh" start &&
     RETVAL=$?
     echo
@@ -82,3 +80,4 @@ case $1 in
     ;;
 esac
 exit 0
+
