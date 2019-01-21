@@ -39,6 +39,7 @@ if [ -f $tarBall ] ; then
     cp $scriptDir/$initFile $tomcat_home/latest/etc/tomcat 
     if [ ! -e /etc/init.d/tomcat ]; 
       then ln -s $tomcat_home/latest/etc/tomcat /etc/init.d/tomcat 
+           chmod 750 $tomcat_home/latest/etc/tomcat
       else echo " **** /etc/init.d/tomcat already exists.  Don't create soft link. *****"
     fi
     # enable tomcat service
