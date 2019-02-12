@@ -8,7 +8,7 @@ CATALINA_HOME="/opt/tomcat"
 tomcatPidDir="/opt/tomcat/temp"
 
 javaDevKit="java-1.8.0-openjdk-devel"
-tomcatUri="https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.14/bin/apache-tomcat-9.0.14.tar.gz"
+tomcatUri="http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.16/bin/apache-tomcat-9.0.16.tar.gz"
 tarBall=`echo $tomcatUri |awk -F "/" '{print $NF}'`
 tomcatVer=$(echo $tarBall |sed "s/\.tar\.gz//")
 
